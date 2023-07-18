@@ -7,11 +7,13 @@ import { auth } from '../../misc/firebase';
 const DashboardToggle = () => {
   const { isOpen, close, open } = useModalState();
   const isMoblie = useMediaQuery('(max-width:992px)');
+
   const onSignOut = useCallback(() => {
     auth.signOut();
     Alert.info('Signed out', 4000);
     close();
   }, [close]);
+
   return (
     <>
       <Button block color="blue" onClick={open}>
