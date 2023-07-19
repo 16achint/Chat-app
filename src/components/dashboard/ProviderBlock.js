@@ -48,7 +48,7 @@ const ProviderBlock = () => {
       Alert.success(`Linked to ${provider.providerId}`, 2000);
       updateIsConnected(provider.providerId, true);
     } catch (error) {
-      Alert.error(error.message);
+      Alert.error(error.message, 4000);
     }
   };
 
