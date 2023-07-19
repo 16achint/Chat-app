@@ -8,6 +8,7 @@ import ModalTitle from 'rsuite/lib/Modal/ModalTitle';
 import AvatarEditor from 'react-avatar-editor';
 import { useProfile } from '../../context/Profile.context';
 import { database, storage } from '../../misc/firebase';
+import ProfileAvatar from '../ProfileAvatar';
 
 const fileInputTypes = '.png, .jpeg, .jpg, .avif';
 const acceptedFileTypes = [
@@ -76,6 +77,11 @@ const AvatarUplaodBtn = () => {
   };
   return (
     <div className="mt-3 text-center">
+      <ProfileAvatar
+        src={profile.avatar}
+        name={profile.name}
+        className="width-200 height-200 img-fullsize font-huge"
+      />
       <div>
         <label
           htmlFor="avatar-upload"
