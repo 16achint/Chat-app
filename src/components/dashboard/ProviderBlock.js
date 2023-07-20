@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { auth } from '../../misc/firebase';
 import { Alert, Button, Icon, Tag } from 'rsuite';
 import firebase from 'firebase';
