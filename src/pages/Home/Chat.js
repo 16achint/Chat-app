@@ -1,4 +1,3 @@
-import React from 'react';
 import ChatTop from '../../components/chat-window/top';
 import Chatbottom from '../../components/chat-window/bottom';
 import Messages from '../../components/chat-window/messages';
