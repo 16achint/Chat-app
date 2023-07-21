@@ -1,12 +1,13 @@
 import { memo } from 'react';
-import { useCrrentRoom } from '../../../context/current.room.context';
+import { useCurrentRoom } from '../../../context/current.room.context';
 import { ButtonToolbar, Icon } from 'rsuite';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import { useMediaQuery } from '../../../misc/custom-hooks';
 import RoomInfoBtnModel from './RoomInfoBtnModel';
+import EditRoomBtnDrawer from './EditRoomBtnDrawer';
 
 const Top = () => {
-  const name = useCrrentRoom(v => v.name);
+  const name = useCurrentRoom(v => v.name);
   const isMobile = useMediaQuery('(max-width:992px)');
   return (
     <div>
@@ -25,7 +26,9 @@ const Top = () => {
           />
           <span className="text-disappear">{name}</span>
         </h4>
-        <ButtonToolbar className="ws-nowrap">todo</ButtonToolbar>
+        <ButtonToolbar className="ws-nowrap">
+          <EditRoomBtnDrawer />
+        </ButtonToolbar>
       </div>
       <div className="d-flex justify-content-between align-items-center">
         <span>todo</span>

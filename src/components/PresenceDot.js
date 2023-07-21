@@ -1,4 +1,3 @@
-import React from 'react';
 import { usePresence } from '../misc/custom-hooks';
 import { Badge, Tooltip, Whisper } from 'rsuite';
 
