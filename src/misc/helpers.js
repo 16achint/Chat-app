@@ -41,7 +41,7 @@ export async function getUserUpdates(userId, keyToUpdate, value, database) {
   });
 
   rSnap.forEach(roomSnap => {
-    updates[`/room/${roomSnap.key}/lastMessage/author/${keyToUpdate}`] = value;
+    updates[`/rooms/${roomSnap.key}/lastMessage/author/${keyToUpdate}`] = value;
   });
 
   return updates;
