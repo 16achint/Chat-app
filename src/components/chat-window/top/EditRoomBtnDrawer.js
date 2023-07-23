@@ -1,6 +1,6 @@
 import { Alert, Button, Drawer } from 'rsuite';
 import { useMediaQuery, useModalState } from '../../../misc/custom-hooks';
-import { useCurrentRoom } from '../../../context/current.room.context';
+import { useCurrentRoom } from '../../../context/current-room.context';
 import { memo } from 'react';
 import EditableInput from '../../EditableInput';
 import { database } from '../../../misc/firebase';

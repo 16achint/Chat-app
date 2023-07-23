@@ -1,4 +1,4 @@
-import { useCurrentRoom } from '../../../context/current.room.context';
+import { useCurrentRoom } from '../../../context/current-room.context';
 import { Button, Modal } from 'rsuite';
 import { useModalState } from '../../../misc/custom-hooks';
 import { memo } from 'react';

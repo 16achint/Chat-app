@@ -4,7 +4,7 @@ import Messages from '../../components/chat-window/messages';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import { useRooms } from '../../context/rooms.context';
 import { Loader } from 'rsuite';
-import { CurrentRoomProvider } from '../../context/current.room.context';
+import { CurrentRoomProvider } from '../../context/current-room.context';
 import { transformToArr } from '../../misc/helpers';
 import { auth } from '../../misc/firebase';
 
@@ -29,6 +29,7 @@ const Chat = () => {
   const currentRoomData = {
     name,
     description,
+    admins,
     isAdmin,
   };
   return (

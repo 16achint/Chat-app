@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { useCurrentRoom } from '../../../context/current.room.context';
+import { useCurrentRoom } from '../../../context/current-room.context';
 import { ButtonToolbar, Icon } from 'rsuite';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import { useMediaQuery } from '../../../misc/custom-hooks';
