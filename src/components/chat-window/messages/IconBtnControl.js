@@ -19,7 +19,7 @@ const IconBtnControl = ({
     >
       <ConditionalBadge condition={badgeContent}>
         <Whisper
-          placement="top"
+          placement="none"
           delay={0}
           delayHide={0}
           delayShow={0}

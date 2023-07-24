@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
-import { database } from '../../../misc/firebase';
+import { auth, database } from '../../../misc/firebase';
 import { transformToArrayWithId } from '../../../misc/helpers';
 import MessageItem from './MessageItem';
 import { Alert } from 'rsuite';
@@ -49,12 +49,96 @@ const Messages = () => {
     [chatId]
   );
 
+  // const handleLike = useCallback(async msgId => {
+  //   const { uid } = auth.currentUser;
+  //   const messageRef = database.ref(`/messages/${msgId}`);
+  //   let alertMsg;
+  //   await messageRef.transaction(msg => {
+  //     if (msg) {
+  //       if (msg.likes && msg.likes[uid]) {
+  //         msg.likeCount -= 1;
+  //         msg.likes[uid] = null;
+  //         alertMsg = 'Like remove';
+  //       } else {
+  //         msg.likeCount += 1;
+  //         if (!msg.likes) {
+  //           msg.likes = {};
+  //         }
+  //         msg.likes[uid] = true;
+  //         alertMsg = 'Like added';
+  //       }
+  //     }
+  //     return msg;
+  //   });
+  //   Alert.info(alertMsg, 2000);
+  // }, []);
+
+  const handleLike = useCallback(async msgId => {
+    const { uid } = auth.currentUser;
+    const messageRef = database.ref(`/messages/${msgId}`);
+    await messageRef.transaction(msg => {
+      if (msg) {
+        if (!msg.likes) {
+          msg.likes = {};
+        }
+
+        if (isNaN(msg.likeCount) || typeof msg.likeCount !== 'number') {
+          msg.likeCount = 0;
+        }
+
+        if (msg.likes[uid]) {
+          msg.likeCount -= 1;
+          msg.likes[uid] = null;
+        } else {
+          msg.likeCount += 1;
+          msg.likes[uid] = true;
+        }
+      }
+      return msg;
+    });
+  }, []);
+
+  // const handleLike = useCallback(async msgId => {
+  //   const { uid } = auth.currentUser;
+  //   const messageRef = database.ref(`/messages/${msgId}`);
+
+  //   let alertMsg;
+
+  //   await messageRef.transaction(msg => {
+  //     if (msg) {
+  //       if (msg.likes && msg.likes[uid]) {
+  //         msg.likeCount -= 1;
+  //         msg.likes[uid] = null;
+  //         alertMsg = 'Like removed';
+  //       } else {
+  //         msg.likeCount += 1;
+
+  //         if (!msg.likes) {
+  //           msg.likes = {};
+  //         }
+
+  //         msg.likes[uid] = true;
+  //         alertMsg = 'Like added';
+  //       }
+  //     }
+
+  //     return msg;
+  //   });
+
+  //   Alert.info(alertMsg, 4000);
+  // }, []);
+
   return (
     <ul className="msg-list custom-scroll">
       {isChatEmpty && <li>No messages</li>}
       {canShowMessages &&
         messages.map(msg => (
-          <MessageItem key={msg.id} message={msg} handleAdmin={handleAdmin} />
+          <MessageItem
+            key={msg.id}
+            message={msg}
+            handleAdmin={handleAdmin}
+            handleLike={handleLike}
+          />
         ))}
     </ul>
   );
