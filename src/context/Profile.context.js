@@ -23,7 +23,6 @@ export const ProfileProvider = ({ children }) => {
     let userStatusRef;
     const authUnSub = auth.onAuthStateChanged(authObj => {
       if (authObj) {
-        console.log('asa' + authObj.uid);
         userStatusRef = database.ref(`/status/${authObj.uid}`);
         userRef = database.ref(`/profiles/${authObj.uid}`);
         userRef.on('value', snap => {
@@ -41,7 +40,6 @@ export const ProfileProvider = ({ children }) => {
         });
 
         database.ref('.info/connected').on('value', snapshot => {
-          // If we're not currently connected, don't do anything.
           if (!!snapshot.val() === false) {
             return;
           }

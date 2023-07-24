@@ -26,17 +26,17 @@ const getText = presence => {
 };
 
 const PresenceDot = ({ uid }) => {
-  const Presence = usePresence(uid);
+  const presence = usePresence(uid);
   return (
     <Whisper
       placement="top"
       controlId="control-id-click"
       trigger="click"
-      speaker={<Tooltip>{getText(Presence)}</Tooltip>}
+      speaker={<Tooltip>{getText(presence)}</Tooltip>}
     >
       <Badge
         className="cursor-pointer"
-        style={{ backgroundColor: getColor(Presence) }}
+        style={{ backgroundColor: getColor(presence) }}
       />
     </Whisper>
   );

@@ -1,4 +1,5 @@
-import { useCallback, useState, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useCallback, useState, useEffect, useRef } from 'react';
 import { database } from './firebase';
 
 export function useModalState(defaultValue = false) {
@@ -28,19 +29,47 @@ export const useMediaQuery = query => {
 };
 
 export function usePresence(uid) {
-  const [Presence, setusePresence] = useState(null);
+  const [presence, setPresence] = useState(null);
 
   useEffect(() => {
     const userStatusRef = database.ref(`/status/${uid}`);
+
+    console.log(`userStatusRef, ${userStatusRef}`); // printing the link of my db where status is online
     userStatusRef.on('value', snap => {
       if (snap.exists()) {
         const data = snap.val();
-        setusePresence(data);
+        console.log('Data' + data); // does not print anything or userStatusRef not running
+        setPresence(data);
       }
-      return () => {
-        userStatusRef.off();
-      };
     });
+
+    return () => {
+      userStatusRef.off();
+    };
   }, [uid]);
-  return Presence;
+
+  return presence;
 }
+
+export const useHover = () => {
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseOver = () => setIsHovering(true);
+  const handleMouseOut = () => setIsHovering(false);
+
+  const nodeRef = useRef();
+
+  useEffect(() => {
+    const node = nodeRef.current;
+    if (node) {
+      node.addEventListener('mouseover', handleMouseOver);
+      node.addEventListener('mouseout', handleMouseOut);
+    }
+    return () => {
+      node.removeEventListener('mouseover', handleMouseOver);
+      node.removeEventListener('mouseout', handleMouseOut);
+    };
+  }, [nodeRef.current]);
+
+  return [nodeRef, isHovering];
+};
