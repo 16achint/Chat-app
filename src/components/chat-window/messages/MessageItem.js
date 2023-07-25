@@ -98,7 +98,6 @@ const MessageItem = ({ message, handleAdmin, handleLike, handleDelete }) => {
           {text && <span className="word-breal-all">{text}</span>}
           {file && renderFileMessage(file)}
         </div>
-        <span className="word-break-all ">{text}</span>
       </div>
     </li>
   );
