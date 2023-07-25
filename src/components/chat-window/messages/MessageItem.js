@@ -10,7 +10,7 @@ import { Button } from 'rsuite';
 import { useHover, useMediaQuery } from '../../../misc/custom-hooks';
 import IconBtnControl from './IconBtnControl';
 
-const MessageItem = ({ message, handleAdmin, handleLike }) => {
+const MessageItem = ({ message, handleAdmin, handleLike, handleDelete }) => {
   const { author, createdAt, text, likes, likeCount } = message;
   const isAdmin = useCurrentRoom(v => v.isAdmin);
   const admins = useCurrentRoom(v => v.admins);
@@ -60,10 +60,18 @@ const MessageItem = ({ message, handleAdmin, handleLike }) => {
           {...(isLiked ? { color: 'red' } : {})}
           isVisible={canShowIcon}
           IconName="heart"
-          tooltip
+          tooltip="Like this message"
           onClick={() => handleLike(message.id)}
           badgeContent={likeCount}
         />
+        {((isAuthor && !isAdmin) || isAdmin) && (
+          <IconBtnControl
+            isVisible={canShowIcon}
+            IconName="close"
+            tooltip="Delete this message"
+            onClick={() => handleDelete(message.id)}
+          />
+        )}
       </div>
       <div>
         <span className="word-break-all ">{text}</span>

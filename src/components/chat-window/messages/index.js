@@ -49,30 +49,6 @@ const Messages = () => {
     [chatId]
   );
 
-  // const handleLike = useCallback(async msgId => {
-  //   const { uid } = auth.currentUser;
-  //   const messageRef = database.ref(`/messages/${msgId}`);
-  //   let alertMsg;
-  //   await messageRef.transaction(msg => {
-  //     if (msg) {
-  //       if (msg.likes && msg.likes[uid]) {
-  //         msg.likeCount -= 1;
-  //         msg.likes[uid] = null;
-  //         alertMsg = 'Like remove';
-  //       } else {
-  //         msg.likeCount += 1;
-  //         if (!msg.likes) {
-  //           msg.likes = {};
-  //         }
-  //         msg.likes[uid] = true;
-  //         alertMsg = 'Like added';
-  //       }
-  //     }
-  //     return msg;
-  //   });
-  //   Alert.info(alertMsg, 2000);
-  // }, []);
-
   const handleLike = useCallback(async msgId => {
     const { uid } = auth.currentUser;
     const messageRef = database.ref(`/messages/${msgId}`);
@@ -98,35 +74,52 @@ const Messages = () => {
     });
   }, []);
 
-  // const handleLike = useCallback(async msgId => {
-  //   const { uid } = auth.currentUser;
-  //   const messageRef = database.ref(`/messages/${msgId}`);
+  const handleDelete = useCallback(
+    async msgId => {
+      if (!window.confirm('Delete this message?')) {
+        return;
+      }
 
-  //   let alertMsg;
+      const currentUser = auth.currentUser; // Assuming you have access to the current user data
 
-  //   await messageRef.transaction(msg => {
-  //     if (msg) {
-  //       if (msg.likes && msg.likes[uid]) {
-  //         msg.likeCount -= 1;
-  //         msg.likes[uid] = null;
-  //         alertMsg = 'Like removed';
-  //       } else {
-  //         msg.likeCount += 1;
+      // Check if the message belongs to the current user (user's own message)
+      const isOwnMessage = messages.find(
+        msg => msg.id === msgId && msg.userId === currentUser.uid
+      );
 
-  //         if (!msg.likes) {
-  //           msg.likes = {};
-  //         }
+      // Check if the current user is an admin
+      const isAdmin = currentUser.isAdmin; // Assuming you have an 'isAdmin' property in the user data
 
-  //         msg.likes[uid] = true;
-  //         alertMsg = 'Like added';
-  //       }
-  //     }
+      // If the user is an admin, they can only delete their own messages
+      if (isAdmin && !isOwnMessage) {
+        Alert.error("Admins cannot delete other users' messages");
+        return;
+      }
+      // If the user is not an admin or the message belongs to the current user, proceed with the deletion
+      const isLast = messages[messages.length - 1].id === msgId;
+      const updates = {};
+      updates[`/messages/${msgId}`] = null;
 
-  //     return msg;
-  //   });
+      if (isLast && messages.length > 1) {
+        updates[`/rooms/${chatId}/lastMessages`] = {
+          ...messages[messages.length - 2],
+          msgId: messages[messages.length - 2].id,
+        };
+      }
 
-  //   Alert.info(alertMsg, 4000);
-  // }, []);
+      if (isLast && messages.length === 1) {
+        updates[`/rooms/${chatId}/lastMessages`] = null;
+      }
+
+      try {
+        await database.ref().update(updates);
+        Alert.info('Message has been deleted');
+      } catch (error) {
+        Alert.error(error.message);
+      }
+    },
+    [chatId, messages]
+  );
 
   return (
     <ul className="msg-list custom-scroll">
@@ -138,6 +131,7 @@ const Messages = () => {
             message={msg}
             handleAdmin={handleAdmin}
             handleLike={handleLike}
+            handleDelete={handleDelete}
           />
         ))}
     </ul>

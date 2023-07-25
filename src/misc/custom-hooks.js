@@ -33,12 +33,9 @@ export function usePresence(uid) {
 
   useEffect(() => {
     const userStatusRef = database.ref(`/status/${uid}`);
-
-    console.log(`userStatusRef, ${userStatusRef}`); // printing the link of my db where status is online
     userStatusRef.on('value', snap => {
       if (snap.exists()) {
         const data = snap.val();
-        console.log('Data' + data); // does not print anything or userStatusRef not running
         setPresence(data);
       }
     });
