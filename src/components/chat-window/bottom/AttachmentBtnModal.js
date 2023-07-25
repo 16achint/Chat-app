@@ -58,7 +58,6 @@ const AttachmentBtnModal = ({ afterUpload }) => {
           <Modal.Title>Upload files</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {' '}
           <Uploader
             autoUpload={false}
             action=""
@@ -71,9 +70,7 @@ const AttachmentBtnModal = ({ afterUpload }) => {
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button block disabled={isLoading}>
-            {' '}
-            onClick={onUpload}
+          <Button block disabled={isLoading} onClick={onUpload}>
             send to chat
           </Button>
 
