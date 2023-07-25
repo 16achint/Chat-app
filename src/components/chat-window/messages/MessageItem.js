@@ -9,9 +9,20 @@ import { auth } from '../../../misc/firebase';
 import { Button } from 'rsuite';
 import { useHover, useMediaQuery } from '../../../misc/custom-hooks';
 import IconBtnControl from './IconBtnControl';
+import ImgbtnModal from './ImgbtnModal';
 
+const renderFileMessage = file => {
+  if (file.contentType.includes('image')) {
+    return (
+      <div className="height-220">
+        <ImgbtnModal src={file.url} fileName={file.name} />
+      </div>
+    );
+  }
+  return <a href={file.url}>Download {file.name}</a>;
+};
 const MessageItem = ({ message, handleAdmin, handleLike, handleDelete }) => {
-  const { author, createdAt, text, likes, likeCount } = message;
+  const { author, createdAt, text, file, likes, likeCount } = message;
   const isAdmin = useCurrentRoom(v => v.isAdmin);
   const admins = useCurrentRoom(v => v.admins);
 
@@ -74,6 +85,10 @@ const MessageItem = ({ message, handleAdmin, handleLike, handleDelete }) => {
         )}
       </div>
       <div>
+        <div>
+          {text && <span className="word-breal-all">{text}</span>}
+          {file && renderFileMessage(file)}
+        </div>
         <span className="word-break-all ">{text}</span>
       </div>
     </li>
