@@ -61,8 +61,8 @@ const Messages = () => {
     loadMessages();
 
     setTimeout(() => {
-      node.scrollTop = node.scrollHeight;
-    }, 200);
+      node.scrollTop = node.scrollHeight; // not working while refreshing the page
+    }, 500);
 
     return () => {
       messagesRef.off('value');
