@@ -32,7 +32,7 @@ exports.sendFcm = functions.https.onCall(async (data, context) => {
       title: `${title} (${roomData.name})`,
       body: message,
     },
-    tokens: registrationTokens,
+    tokens,
   };
   const batchResponse = await messaging.sendMulticast(fcmMessage);
   const failedTokens = [];
@@ -54,7 +54,7 @@ function checkIfAuth(context) {
   if (!context.auth) {
     throw new functions.https.HttpsError(
       'unauthenticated',
-      'you have to signed In'
+      'you have to be signed In'
     );
   }
 }
