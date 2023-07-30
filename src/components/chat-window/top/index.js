@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import { useMediaQuery } from '../../../misc/custom-hooks';
 import RoomInfoBtnModel from './RoomInfoBtnModel';
 import EditRoomBtnDrawer from './EditRoomBtnDrawer';
+import SendFcmBtnModal from './SendFcmBtnModal';
 
 const Top = () => {
   const name = useCurrentRoom(v => v.name);
@@ -32,6 +33,7 @@ const Top = () => {
         </ButtonToolbar>
       </div>
       <div className="d-flex justify-content-between align-items-center">
+        {isAdmin && <SendFcmBtnModal />}
         <RoomInfoBtnModel />
       </div>
     </div>
