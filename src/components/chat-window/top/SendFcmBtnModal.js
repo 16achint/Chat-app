@@ -1,27 +1,24 @@
-import { useState, useCallback, useRef } from 'react';
-import { useParams } from 'react-router';
+import { useCallback, useRef, useState } from 'react';
 import {
+  Alert,
   Button,
-  Icon,
-  Modal,
-  Form,
   ControlLabel,
+  Form,
   FormControl,
   FormGroup,
+  Icon,
+  Modal,
   Schema,
-  Alert,
 } from 'rsuite';
-import { httpsCallable } from 'firebase/functions';
 import { useModalState } from '../../../misc/custom-hooks';
 import { functions } from '../../../misc/firebase';
-
+import { useParams } from 'react-router';
 const { StringType } = Schema.Types;
 
 const model = Schema.Model({
   title: StringType().isRequired('Title is required'),
   message: StringType().isRequired('Message body is required'),
 });
-
 const INITIAL_FORM = {
   title: '',
   message: '',
@@ -30,24 +27,22 @@ const INITIAL_FORM = {
 const SendFcmBtnModal = () => {
   const { chatId } = useParams();
   const { isOpen, open, close } = useModalState();
-
   const [formValue, setFormValue] = useState(INITIAL_FORM);
   const [isLoading, setIsLoading] = useState(false);
-  const formRef = useRef();
+  const fromRef = useRef();
 
   const onFormChange = useCallback(value => {
     setFormValue(value);
   }, []);
 
   const onSubmit = async () => {
-    if (!formRef.current.check()) {
+    if (!fromRef.current.check()) {
       return;
     }
-
     setIsLoading(true);
 
     try {
-      const sendFcm = httpsCallable(functions, 'sendFcm');
+      const sendFcm = functions.httpsCallable(functions, 'sendFcm');
       await sendFcm({ chatId, ...formValue });
 
       setIsLoading(false);
@@ -68,7 +63,7 @@ const SendFcmBtnModal = () => {
 
       <Modal show={isOpen} onHide={close}>
         <Modal.Header>
-          <Modal.Title>Send notification to room users</Modal.Title>
+          <Modal.Title>send notification to room user</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form
@@ -76,7 +71,7 @@ const SendFcmBtnModal = () => {
             onChange={onFormChange}
             formValue={formValue}
             model={model}
-            ref={formRef}
+            ref={fromRef}
           >
             <FormGroup>
               <ControlLabel>Title</ControlLabel>
@@ -101,7 +96,7 @@ const SendFcmBtnModal = () => {
             onClick={onSubmit}
             disabled={isLoading}
           >
-            Publish message
+            publish message
           </Button>
         </Modal.Footer>
       </Modal>
