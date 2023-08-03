@@ -3,22 +3,27 @@ const admin = require('firebase-admin');
 
 const database = admin.database();
 const messaging = admin.messaging();
+
 exports.sendFcm = functions
   .region('asia-south1')
   .https.onCall(async (data, context) => {
-    checkIfAuth(context.auth);
+    checkIfAuth(context);
+
     const { chatId, title, message } = data;
+
     const roomSnap = await database.ref(`/rooms/${chatId}`).once('value');
 
-    if (!roomSnap()) {
+    if (!roomSnap.exists()) {
       return false;
     }
 
     const roomData = roomSnap.val();
+
     checkIfAllowed(context, transformToArr(roomData.admins));
+
     const fcmUsers = transformToArr(roomData.fcmUsers);
-    const userTokenPromises = fcmUsers.map(uid => getUserTokens(uid));
-    const userTokensResult = await Promise.all(userTokenPromises);
+    const userTokensPromises = fcmUsers.map(uid => getUserTokens(uid));
+    const userTokensResult = await Promise.all(userTokensPromises);
 
     const tokens = userTokensResult.reduce(
       (accTokens, userTokens) => [...accTokens, ...userTokens],
@@ -36,6 +41,7 @@ exports.sendFcm = functions
       },
       tokens,
     };
+
     const batchResponse = await messaging.sendMulticast(fcmMessage);
     const failedTokens = [];
 
@@ -46,9 +52,11 @@ exports.sendFcm = functions
         }
       });
     }
+
     const removePromises = failedTokens.map(token =>
       database.ref(`/fcm_tokens/${token}`).remove()
     );
+
     return Promise.all(removePromises).catch(err => err.message);
   });
 
@@ -56,19 +64,20 @@ function checkIfAuth(context) {
   if (!context.auth) {
     throw new functions.https.HttpsError(
       'unauthenticated',
-      'you have to be signed In'
+      'You have to be signed in'
     );
   }
 }
 
 function checkIfAllowed(context, chatAdmins) {
-  if (!chatAdmins.include(context.auth.uid)) {
+  if (!chatAdmins.includes(context.auth.uid)) {
     throw new functions.https.HttpsError(
       'unauthenticated',
       'Restricted access'
     );
   }
 }
+
 function transformToArr(snapVal) {
   return snapVal ? Object.keys(snapVal) : [];
 }
@@ -83,5 +92,6 @@ async function getUserTokens(uid) {
   if (!userTokensSnap.hasChildren()) {
     return [];
   }
+
   return Object.keys(userTokensSnap.val());
 }
