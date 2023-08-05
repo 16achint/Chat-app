@@ -46,6 +46,9 @@ const CreateRoomBtnModel = () => {
       admins: {
         [auth.currentUser.uid]: true,
       },
+      fcmUsers: {
+        [auth.currentUser.uid]: true,
+      },
     };
     try {
       await database.ref('rooms').push(newRoomdata);

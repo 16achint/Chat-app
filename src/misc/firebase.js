@@ -36,19 +36,10 @@ if (messaging) {
   });
 }
 
+messaging.onMessage(data => {
+  console.log(data);
+});
+
 if (isLocalhost) {
-  functions.useFunctionsEmulator('localhost', '5001');
+  functions.useFunctionsEmulator('http://127.0.0.1:5001');
 }
-
-// if (messaging) {
-//   messaging.usePublicVapidKey(
-//     'BGwqAb_5soMWQmnpLrye4Guv74Wqj5jk9FqGBl2GZLl4FuU8EJgKEr0OLmtcF1ARd9tpnPyYwyNMZ6IOC5CQZwc'
-//   );
-//   messaging.onMessage(data => {
-//     console.log(data);
-//   });
-// }
-
-// if (isLocalhost) {
-//   functions.useFunctionsEmulator('http://127.0.0.1:5001');
-// }
