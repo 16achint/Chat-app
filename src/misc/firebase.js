@@ -1,3 +1,4 @@
+import { Notification as Toast } from 'rsuite';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
@@ -15,25 +16,39 @@ const config = {
   appId: '1:689850280386:web:b7ad2483efeb8ef26e8e5b',
 };
 
+export const fcmVapidKey =
+  'BGwqAb_5soMWQmnpLrye4Guv74Wqj5jk9FqGBl2GZLl4FuU8EJgKEr0OLmtcF1ARd9tpnPyYwyNMZ6IOC5CQZwc';
+
 const app = firebase.initializeApp(config);
 export const auth = app.auth();
 export const database = app.database();
 export const storage = app.storage();
 export const functions = app.functions('asia-south1');
 
-export const messageing = firebase.messaging.isSupported()
+export const messaging = firebase.messaging.isSupported()
   ? app.messaging()
   : null;
 
-if (messageing) {
-  messageing.usePublicVapidKey(
-    'BGwqAb_5soMWQmnpLrye4Guv74Wqj5jk9FqGBl2GZLl4FuU8EJgKEr0OLmtcF1ARd9tpnPyYwyNMZ6IOC5CQZwc'
-  );
-  messageing.onMessage(data => {
-    console.log(data);
+if (messaging) {
+  messaging.onMessage(({ notification }) => {
+    const { title, body } = notification;
+    Toast.info({ title, description: body, duration: 0 });
   });
 }
 
 if (isLocalhost) {
-  functions.useFunctionsEmulator('http://127.0.0.1:5001');
+  functions.useFunctionsEmulator('localhost', '5001');
 }
+
+// if (messaging) {
+//   messaging.usePublicVapidKey(
+//     'BGwqAb_5soMWQmnpLrye4Guv74Wqj5jk9FqGBl2GZLl4FuU8EJgKEr0OLmtcF1ARd9tpnPyYwyNMZ6IOC5CQZwc'
+//   );
+//   messaging.onMessage(data => {
+//     console.log(data);
+//   });
+// }
+
+// if (isLocalhost) {
+//   functions.useFunctionsEmulator('http://127.0.0.1:5001');
+// }

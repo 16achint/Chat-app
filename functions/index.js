@@ -10,3 +10,6 @@ admin.initializeApp({
 const { sendFcm } = require('./src/fcm');
 
 exports.sendFcm = sendFcm;
+exports.helloWorld = functions.https.onRequest((request, response) => {
+  response.send('hello world');
+});
