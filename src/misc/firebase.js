@@ -30,13 +30,11 @@ if (messaging) {
     'BGwqAb_5soMWQmnpLrye4Guv74Wqj5jk9FqGBl2GZLl4FuU8EJgKEr0OLmtcF1ARd9tpnPyYwyNMZ6IOC5CQZwc'
   );
 }
-messaging.onMessage(({ notification }) => {
-  const { title, body } = notification;
-  Toast.info({ title, description: body, duration: 0 });
-});
-
 messaging.onMessage(data => {
+  const { notification } = data;
   console.log(data);
+  const { title, body } = notification;
+  Toast.info({ title, description: body, duration: 10000 });
 });
 
 if (isLocalhost) {
