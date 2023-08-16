@@ -49,9 +49,9 @@ const SendFcmBtnModal = () => {
       setFormValue(INITIAL_FORM);
       close();
 
-      Alert.info('Notification has been sent', 7000);
+      Alert.info('Notification has been sent', 3000);
     } catch (error) {
-      Alert.error(error.message, 7000);
+      Alert.error(error.message, 5000);
     }
   };
 
